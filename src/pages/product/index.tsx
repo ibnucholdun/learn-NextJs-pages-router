@@ -1,17 +1,41 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-type Props = {};
+type productType = {
+  id: number;
+  name: string;
+  price: number;
+  size: string;
+};
 
-const ProductPage = (props: Props) => {
-  const [isLogin, setIsLogin] = useState(false);
+const ProductPage = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [products, setProducts] = useState([]);
   const { push } = useRouter();
+
   useEffect(() => {
     if (!isLogin) {
       push("/auth/login");
     }
   }, []);
-  return <div>ProductPage</div>;
+
+  useEffect(() => {
+    fetch("/api/product").then((res) => {
+      res.json().then((data) => {
+        setProducts(data.data);
+      });
+    });
+  });
+
+  return (
+    <div>
+      <h1>ProductPage</h1>
+      {products &&
+        products.map((product: productType) => (
+          <div key={product.id}>{product.name}</div>
+        ))}
+    </div>
+  );
 };
 
 export default ProductPage;
