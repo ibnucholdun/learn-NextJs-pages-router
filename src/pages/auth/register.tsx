@@ -1,16 +1,12 @@
-import Link from "next/link";
-import React from "react";
+import RegisterView from "@/views/Auth/Register";
 
 type Props = {};
 
 const RegisterPage = (props: Props) => {
   return (
-    <div>
-      <h1>Register Page</h1>
-      <p>
-        Sudah punya akun? Login <Link href={"/auth/login"}>disini</Link>
-      </p>
-    </div>
+    <>
+      <RegisterView />
+    </>
   );
 };
 
