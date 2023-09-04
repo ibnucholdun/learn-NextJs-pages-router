@@ -6,7 +6,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const disableNavbar = ["/auth/login", "/auth/register"];
+const disableNavbar = ["/auth/login", "/auth/register", "/404"];
 
 // INI ADALAH FILE CONTAINER DARI SEBUAH WEBSITE
 
