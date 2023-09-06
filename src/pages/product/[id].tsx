@@ -12,20 +12,49 @@ type productType = {
   image: string;
 };
 
-const DetailProductPage = ({ product }: { product: productType }) => {
-  const { query } = useRouter();
+// const DetailProductPage = ({ product }: { product: productType }) => {
+//   const { query } = useRouter();
 
-  // clientside
-  // const { data, error, isLoading } = useSWR(
-  //   `/api/product/${query.id}`,
-  //   fetcher
-  // );
+//   // clientside
+//   // const { data, error, isLoading } = useSWR(
+//   //   `/api/product/${query.id}`,
+//   //   fetcher
+//   // );
+//   return (
+//     <div>
+//       {/* Clientside */}
+//       {/* <DetailProductView product={isLoading ? [] : data.data} /> */}
+
+//       {/* Serverside */}
+//       <DetailProductView product={product} />
+//     </div>
+//   );
+// };
+
+// export default DetailProductPage;
+
+// // Serverside
+// export const getServerSideProps = async ({
+//   params,
+// }: {
+//   params: { id: string };
+// }) => {
+//   // fetch data
+//   const res = await fetch(`http://localhost:3000/api/product/${params.id}`);
+//   const data = await res.json();
+
+//   return {
+//     props: {
+//       product: data.data,
+//     },
+//   };
+// };
+
+//STATIC SITE GENERATION
+
+const DetailProductPage = ({ product }: { product: productType }) => {
   return (
     <div>
-      {/* Clientside */}
-      {/* <DetailProductView product={isLoading ? [] : data.data} /> */}
-
-      {/* Serverside */}
       <DetailProductView product={product} />
     </div>
   );
@@ -33,8 +62,18 @@ const DetailProductPage = ({ product }: { product: productType }) => {
 
 export default DetailProductPage;
 
-// Serverside
-export const getServerSideProps = async ({
+export const getStaticPaths = async () => {
+  const res = await fetch("http://localhost:3000/api/product");
+  const data = await res.json();
+
+  const paths = data.data.map((product: productType) => ({
+    params: { id: product.id },
+  }));
+
+  return { paths, fallback: false };
+};
+
+export const getStaticProps = async ({
   params,
 }: {
   params: { id: string };
