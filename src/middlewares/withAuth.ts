@@ -5,6 +5,8 @@ import {
   NextFetchEvent,
   NextResponse,
 } from "next/server";
+
+const onlyAdmin = ["/admin"];
 export const withAuth = (
   middleware: NextMiddleware,
   requireAuth: string[] = []
@@ -21,6 +23,9 @@ export const withAuth = (
         const url = new URL("/auth/login", req.url);
         url.searchParams.append("callbackUrl", encodeURI(req.url)); //code ini digunakan ketika kita membuka page yang kita inginkan tetpai belum login, dan ketika kita login maka akan diredirect ke halamanya tadi
         return NextResponse.redirect(url);
+      }
+      if (token.role !== "admin" && onlyAdmin.includes(pathname)) {
+        return NextResponse.redirect(new URL("/", req.url));
       }
     }
     return middleware(req, next);

@@ -7,6 +7,6 @@ export const mainMiddleware = (req: NextRequest) => {
   return res;
 };
 
-export default withAuth(mainMiddleware, ["/product", "/about"]); // parameter ke 2 digunakan untuk menentukan route yang ingin diprivate
+export default withAuth(mainMiddleware, ["/product", "/about", "/admin"]); // parameter ke 2 digunakan untuk menentukan route yang ingin diprivate
 
 // file ini digunakan untuk menghandle private routes
