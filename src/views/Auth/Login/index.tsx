@@ -1,24 +1,94 @@
-import React from "react";
-import style from "./Login.module.scss";
+import styles from "./Login.module.scss";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 type Props = {};
 
 const LoginView = (props: Props) => {
-  // Navigasi menggunakan useRouter yang fungsinya dapat meredirect ke halaman tertentu menggunakan keyword push
-  // penerapannya bisa digunakan pada saat falidasi login dan digunakan pada button login untuk meredirect ke halaman utamanya
-  const { push } = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { push, query } = useRouter();
 
-  const handleLogin = () => {
-    push("/product");
+  const callbackUrl: any = query.callbackUrl || "/";
+
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    const data = {
+      email: event.target.email.value,
+      password: event.target.password.value,
+    };
+
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        callbackUrl,
+      });
+
+      if (!result?.error) {
+        setIsLoading(false);
+        push(callbackUrl);
+      } else {
+        setIsLoading(false);
+        setError("Email or password is incorrect");
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+      setError("Email or password is incorrect");
+    }
   };
+
   return (
-    <div className={style.login}>
-      <h1>LoginPage</h1>
-      <button onClick={() => handleLogin()}>Login</button>
-      <p>
-        Belum punya akun? Daftar <Link href={"/auth/register"}>disini</Link>
+    <div className={styles.login}>
+      <h1 className={styles.login__title}>Login</h1>
+      {error && <div className={styles.login__error}>{error}</div>}
+      <div className={styles.login__form}>
+        <form onSubmit={handleLogin}>
+          <div className={styles.login__form__item}>
+            <label htmlFor="email" className={styles.login__form__item__label}>
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="example@email.com"
+              className={styles.login__form__item__input}
+            />
+          </div>
+          <div className={styles.login__form__item}>
+            <label
+              htmlFor="password"
+              className={styles.login__form__item__label}
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="********"
+              className={styles.login__form__item__input}
+            />
+          </div>
+          <button
+            type="submit"
+            className={styles.login__form__item__button}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Login"}
+          </button>
+        </form>
+      </div>
+      <p className={styles.login__link}>
+        Don{"'"}t have an account? Sign Up{" "}
+        <Link href={"/auth/register"}>here</Link>
       </p>
     </div>
   );

@@ -1,3 +1,5 @@
+import { signIn } from "@/utils/db/service";
+import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -25,15 +27,14 @@ const authOptions: NextAuthOptions = {
           email: string;
           password: string;
         };
-        const user: any = {
-          // ini harusnya diambil dari database dan dibawah sebagai contoh tidak menggunakann DB
-          id: 1,
-          email: email,
-          password: password,
-        };
+        const user: any = await signIn({ email });
 
         if (user) {
-          return user;
+          const passwordConfirm = await compare(password, user.password);
+          if (passwordConfirm) {
+            return user;
+          }
+          return null;
         } else {
           return null;
         }
@@ -43,9 +44,11 @@ const authOptions: NextAuthOptions = {
 
   //setelah ini dijalankan ketika berhasil login
   callbacks: {
-    jwt({ token, account, user, profile }) {
+    jwt({ token, account, user, profile }: any) {
       if (account?.provider === "credentials") {
         token.email = user.email;
+        token.fullname = user.fullname;
+        token.role = user.role;
       }
       return token;
     },
@@ -54,8 +57,20 @@ const authOptions: NextAuthOptions = {
       if ("email" in token) {
         session.user.email = token.email;
       }
+
+      if ("fullname" in token) {
+        session.user.fullname = token.fullname;
+      }
+
+      if ("role" in token) {
+        session.user.role = token.role;
+      }
       return session;
     },
+  },
+
+  pages: {
+    signIn: "/auth/login",
   },
 };
 

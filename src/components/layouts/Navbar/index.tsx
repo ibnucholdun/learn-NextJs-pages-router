@@ -10,7 +10,7 @@ const Navbar = (props: Props) => {
     <div className={style.navbar}>
       <div className="big">Navbar</div>
       <div>
-        {data?.user?.email}{" "}
+        {data?.user?.fullname}
         {data ? (
           <button className={style.button} onClick={() => signOut()}>
             Sign Out

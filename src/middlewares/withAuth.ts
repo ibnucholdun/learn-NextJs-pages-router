@@ -18,7 +18,8 @@ export const withAuth = (
         secret: process.env.NEXTAUTH_SECRET,
       });
       if (!token) {
-        const url = new URL("/", req.url);
+        const url = new URL("/auth/login", req.url);
+        url.searchParams.append("callbackUrl", encodeURI(req.url)); //code ini digunakan ketika kita membuka page yang kita inginkan tetpai belum login, dan ketika kita login maka akan diredirect ke halamanya tadi
         return NextResponse.redirect(url);
       }
     }
