@@ -1,20 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { withAuth } from "./middlewares/withAuth";
 
-export const middleware = (req: NextRequest) => {
-  const isLogin = false;
-  if (isLogin) {
-    // jika sudah login menjalakan kode ini
-    return NextResponse.next();
-  } else {
-    // jika belum login menjalankan kode ini
-    return NextResponse.redirect(new URL("/auth/login", req.url)); // halaman akan diredirect ke halaman ini
-  }
+export const mainMiddleware = (req: NextRequest) => {
+  const res = NextResponse.next();
+  return res;
 };
 
-// halaman yang mau di redirect
-export const config = {
-  matcher: ["/product", "/setting"],
-};
+export default withAuth(mainMiddleware, ["/product", "/about"]); // parameter ke 2 digunakan untuk menentukan route yang ingin diprivate
 
 // file ini digunakan untuk menghandle private routes
