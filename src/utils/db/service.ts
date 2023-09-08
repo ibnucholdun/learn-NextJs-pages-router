@@ -6,6 +6,7 @@ import {
   getDocs,
   getFirestore,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import app from "./firebase";
@@ -82,6 +83,48 @@ export const signUp = async (
       })
       .catch((error: any) => {
         callback({ status: false, message: error });
+      });
+  }
+};
+
+// SIGNIN WITH GOOGLE
+export const signInWithGoogle = async (userData: any, callback: any) => {
+  const q = query(
+    collection(firestore, "users"),
+    where("email", "==", userData.email) // mengecek email yang mau didaftarkan sudah terdaftar atau belum
+  );
+
+  const snapshot = await getDocs(q);
+  const data: any = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
+  if (data.length > 0) {
+    userData.role = data[0].role;
+    await updateDoc(doc(firestore, "users", data[0].id), userData)
+      .then(() => {
+        callback({
+          status: true,
+          message: "Sign In With Google Success",
+          data: userData,
+        });
+      })
+      .catch((error: any) => {
+        callback({ status: false, message: "Sign In With Google Failed" });
+      });
+  } else {
+    userData.role = "member";
+    await addDoc(collection(firestore, "users"), userData)
+      .then(() => {
+        callback({
+          status: true,
+          message: "Sign In With Google Success",
+          data: userData,
+        });
+      })
+      .catch((error: any) => {
+        callback({ status: false, message: "Sign In With Google Failed" });
       });
   }
 };

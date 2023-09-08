@@ -1,4 +1,4 @@
-import { signIn } from "@/utils/db/service";
+import { signIn, signInWithGoogle } from "@/utils/db/service";
 import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
@@ -50,7 +50,7 @@ const authOptions: NextAuthOptions = {
 
   //setelah ini dijalankan ketika berhasil login
   callbacks: {
-    jwt({ token, account, user, profile }: any) {
+    async jwt({ token, account, user, profile }: any) {
       if (account?.provider === "credentials") {
         token.email = user.email;
         token.fullname = user.fullname;
@@ -61,17 +61,21 @@ const authOptions: NextAuthOptions = {
         // login menggunkan akun google
         const data = {
           email: user.email,
-          fullname: user.fullname,
-          image: user.image,
+          fullname: user.name,
           role: user.role,
+          image: user.image,
           type: "google",
         };
 
-        token.email = data.email;
-        token.fullname = data.fullname;
-        token.role = data.role;
-        token.image = data.image;
-        token.type = data.type;
+        await signInWithGoogle(data, (result: any) => {
+          if (result.status) {
+            token.email = result.data.email;
+            token.fullname = result.data.fullname;
+            token.image = result.data.image;
+            token.role = result.data.role;
+            token.type = result.data.type;
+          }
+        });
       }
       return token;
     },
