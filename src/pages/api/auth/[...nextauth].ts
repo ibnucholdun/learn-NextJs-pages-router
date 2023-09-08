@@ -3,6 +3,7 @@ import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 const authOptions: NextAuthOptions = {
   session: {
@@ -40,6 +41,11 @@ const authOptions: NextAuthOptions = {
         }
       },
     }),
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || "",
+    }),
   ],
 
   //setelah ini dijalankan ketika berhasil login
@@ -49,6 +55,23 @@ const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.fullname = user.fullname;
         token.role = user.role;
+      }
+
+      if (account?.provider === "google") {
+        // login menggunkan akun google
+        const data = {
+          email: user.email,
+          fullname: user.fullname,
+          image: user.image,
+          role: user.role,
+          type: "google",
+        };
+
+        token.email = data.email;
+        token.fullname = data.fullname;
+        token.role = data.role;
+        token.image = data.image;
+        token.type = data.type;
       }
       return token;
     },
@@ -60,6 +83,10 @@ const authOptions: NextAuthOptions = {
 
       if ("fullname" in token) {
         session.user.fullname = token.fullname;
+      }
+
+      if ("image" in token) {
+        session.user.image = token.image;
       }
 
       if ("role" in token) {

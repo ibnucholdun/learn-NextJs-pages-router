@@ -44,6 +44,10 @@ const LoginView = (props: Props) => {
     }
   };
 
+  const handleLoginWithGoogle = () => {
+    signIn("google", { callbackUrl, redirect: false });
+  };
+
   return (
     <div className={styles.login}>
       <h1 className={styles.login__title}>Login</h1>
@@ -85,6 +89,12 @@ const LoginView = (props: Props) => {
             {isLoading ? "Loading..." : "Login"}
           </button>
         </form>
+        <button
+          onClick={() => handleLoginWithGoogle()}
+          className={styles.login__form__item__google}
+        >
+          Sign In with Google
+        </button>
       </div>
       <p className={styles.login__link}>
         Don{"'"}t have an account? Sign Up{" "}
