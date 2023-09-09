@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Product.module.scss";
 import Link from "next/link";
+import Image from "next/image";
 
 type productType = {
   id: number;
@@ -25,7 +26,8 @@ const ProductView = ({ products }: { products: productType[] }) => {
                   className={styles.product__content__item}
                 >
                   <div className={styles.product__content__item__image}>
-                    <img src={product.image} alt={product.name} />
+                    {/* <img src={product.image} alt={product.name} /> */}
+                    <Image src={product.image} alt={product.name} />
                   </div>
                   <h4 className={styles.product__content__item__name}>
                     {product.name}
