@@ -1,7 +1,9 @@
 import React from "react";
-import Navbar from "../Navbar";
 import { useRouter } from "next/router";
 import { Roboto } from "next/font/google";
+import dynamic from "next/dynamic";
+
+const Navbar = dynamic(() => import("../Navbar"), { ssr: false });
 
 type Props = {
   children: React.ReactNode;
