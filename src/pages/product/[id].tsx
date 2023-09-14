@@ -23,10 +23,10 @@ const DetailProductPage = ({ product }: { product: productType }) => {
   return (
     <div>
       {/* Clientside */}
-      {/* <DetailProductView product={isLoading ? [] : data.data} /> */}
+      <DetailProductView product={isLoading ? [] : data?.data} />
 
       {/* Serverside */}
-      <DetailProductView product={product} />
+      {/* <DetailProductView product={product} /> */}
     </div>
   );
 };
