@@ -40,7 +40,7 @@ type productType = {
 //   params: { id: string };
 // }) => {
 //   // fetch data
-//   const res = await fetch(`http://localhost:3000/api/product/${params.id}`);
+//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/product/${params.id}`);
 //   const data = await res.json();
 
 //   return {
@@ -63,7 +63,7 @@ const DetailProductPage = ({ product }: { product: productType }) => {
 export default DetailProductPage;
 
 export const getStaticPaths = async () => {
-  const res = await fetch("http://localhost:3000/api/product");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/product`);
   const data = await res.json();
 
   const paths = data.data.map((product: productType) => ({
@@ -79,7 +79,9 @@ export const getStaticProps = async ({
   params: { id: string };
 }) => {
   // fetch data
-  const res = await fetch(`http://localhost:3000/api/product/${params.id}`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/product/${params.id}`
+  );
   const data = await res.json();
 
   return {
