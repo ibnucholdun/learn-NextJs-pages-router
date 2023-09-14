@@ -25,7 +25,7 @@ const ProductPage = () => {
       {/* <ProductView products={products}></ProductView> */}
 
       {/* Fetching menggunakan useSWR */}
-      <ProductView products={isLoading ? [] : data.data}></ProductView>
+      <ProductView products={isLoading ? [] : data?.data}></ProductView>
     </>
   );
 };

@@ -16,38 +16,37 @@ const ProductView = ({ products }: { products: productType[] }) => {
     <div className={styles.product}>
       <h1 className={styles.product__title}>Product</h1>
       <div className={styles.product__content}>
-        {products.length > 0 ? (
+        {products?.length > 0 ? (
           <>
-            {products &&
-              products.map((product: productType) => (
-                <Link
-                  href={`/product/${product.id}`}
-                  key={product.id}
-                  className={styles.product__content__item}
-                >
-                  <div className={styles.product__content__item__image}>
-                    {/* <img src={product.image} alt={product.name} /> */}
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={400}
-                      height={400}
-                    />
-                  </div>
-                  <h4 className={styles.product__content__item__name}>
-                    {product.name}
-                  </h4>
-                  <p className={styles.product__content__item__category}>
-                    {product.category}
-                  </p>
-                  <p className={styles.product__content__item__price}>
-                    {product.price.toLocaleString("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                    })}
-                  </p>
-                </Link>
-              ))}
+            {products?.map((product: productType) => (
+              <Link
+                href={`/product/${product.id}`}
+                key={product.id}
+                className={styles.product__content__item}
+              >
+                <div className={styles.product__content__item__image}>
+                  {/* <img src={product.image} alt={product.name} /> */}
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={400}
+                    height={400}
+                  />
+                </div>
+                <h4 className={styles.product__content__item__name}>
+                  {product.name}
+                </h4>
+                <p className={styles.product__content__item__category}>
+                  {product.category}
+                </p>
+                <p className={styles.product__content__item__price}>
+                  {product.price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  })}
+                </p>
+              </Link>
+            ))}
           </>
         ) : (
           <div className={styles.product__content__skeleton}>
